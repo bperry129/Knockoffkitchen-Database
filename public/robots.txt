@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://knockoffkitchen.com/sitemap.xml
+
+# Allow crawling of all recipe pages
+Allow: /recipes/
+Allow: /brands/
+Allow: /categories/
+Allow: /search
+
+# Disallow admin or private areas (if any in future)
+Disallow: /admin/
+Disallow: /api/
+
+# Crawl delay for being respectful to server resources
+Crawl-delay: 1

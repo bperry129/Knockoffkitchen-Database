@@ -1,0 +1,283 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom line-clamp utilities */
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Custom styles for recipe pages */
+@layer components {
+  .recipe-content {
+    @apply max-w-none;
+  }
+  
+  .recipe-content h1 {
+    @apply text-3xl font-bold text-gray-900 mb-6 border-b-2 border-purple-200 pb-4 bg-gradient-to-r from-purple-50 to-white p-4 rounded-lg;
+  }
+  
+  .recipe-content h2 {
+    @apply text-2xl font-bold text-white mb-4 mt-8 bg-purple-700 px-4 py-3 rounded-lg shadow-md;
+  }
+  
+  .recipe-content h3 {
+    @apply text-xl font-semibold text-purple-800 mb-3 mt-6 border-l-4 border-purple-400 pl-4 py-2 bg-purple-50 rounded-r-lg;
+  }
+  
+  .recipe-content h4 {
+    @apply text-lg font-semibold text-gray-800 mb-2 mt-4 border-b border-gray-200 pb-1;
+  }
+  
+  .recipe-content p {
+    @apply text-gray-700 leading-relaxed mb-4 text-base;
+  }
+  
+  /* Special styling for category */
+  .recipe-content p:first-of-type {
+    @apply bg-yellow-100 border border-yellow-300 rounded-lg px-4 py-2 font-semibold text-yellow-800 inline-block mb-6;
+  }
+  
+  .recipe-content ul {
+    @apply space-y-3 mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200;
+  }
+  
+  .recipe-content ol {
+    @apply space-y-3 mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200;
+  }
+  
+  .recipe-content li {
+    @apply text-gray-700 leading-relaxed pl-2;
+  }
+  
+  .recipe-content ul li {
+    @apply relative flex items-start;
+  }
+  
+  .recipe-content ul li::before {
+    content: "🔸";
+    @apply mr-2 text-purple-600 flex-shrink-0 mt-0.5;
+  }
+  
+  .recipe-content ol li {
+    @apply list-decimal ml-4 pl-2;
+  }
+  
+  .recipe-content ol li::marker {
+    @apply text-blue-600 font-bold;
+  }
+  
+  /* Enhanced table styling for nutrition facts */
+  .recipe-content table {
+    @apply w-full mb-8 bg-white rounded-xl overflow-hidden shadow-lg border-0;
+  }
+  
+  .recipe-content th {
+    @apply bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-4 text-left font-bold text-sm uppercase tracking-wide;
+  }
+  
+  .recipe-content td {
+    @apply px-6 py-4 text-gray-700 border-b border-gray-100;
+  }
+  
+  .recipe-content tr:nth-child(even) td {
+    @apply bg-gray-50;
+  }
+  
+  .recipe-content tr:hover td {
+    @apply bg-purple-50;
+  }
+  
+  /* Special sections with boxes */
+  .recipe-content blockquote {
+    @apply border-l-4 border-purple-400 pl-6 py-4 bg-gradient-to-r from-purple-50 to-white text-gray-700 italic mb-6 rounded-r-lg shadow-sm;
+  }
+  
+  .recipe-content code {
+    @apply bg-purple-100 px-3 py-1 rounded-md text-sm font-mono text-purple-800 border border-purple-200;
+  }
+  
+  .recipe-content pre {
+    @apply bg-gray-900 text-green-400 p-6 rounded-lg overflow-x-auto mb-6 shadow-lg;
+  }
+  
+  .recipe-content pre code {
+    @apply bg-transparent p-0 text-green-400 border-0;
+  }
+  
+  .recipe-content strong {
+    @apply font-bold text-gray-900 bg-yellow-100 px-1 rounded;
+  }
+  
+  .recipe-content em {
+    @apply italic text-purple-700;
+  }
+  
+  .recipe-content hr {
+    @apply border-0 border-t-2 border-purple-400 my-8;
+  }
+  
+  /* Recipe sections containers */
+  .recipe-section {
+    @apply mb-8 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden;
+  }
+  
+  .recipe-section-header {
+    @apply bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-4 font-bold text-lg;
+  }
+  
+  .recipe-section-content {
+    @apply p-6;
+  }
+  
+  /* Ingredients special styling */
+  .recipe-content h3:contains("Ingredients") + ul,
+  .recipe-content h3:contains("ingredients") + ul,
+  .recipe-content h2:contains("Ingredients") + ul,
+  .recipe-content h2:contains("ingredients") + ul {
+    @apply bg-green-50 border-green-200;
+  }
+  
+  /* Instructions special styling */
+  .recipe-content h3:contains("Instructions") + ol,
+  .recipe-content h3:contains("instructions") + ol,
+  .recipe-content h2:contains("Instructions") + ol,
+  .recipe-content h2:contains("instructions") + ol {
+    @apply bg-blue-50 border-blue-200;
+  }
+  
+  /* Tips and Pro Tips styling */
+  .recipe-content h2:contains("Tips"),
+  .recipe-content h2:contains("Pro Tips"),
+  .recipe-content h3:contains("Tips"),
+  .recipe-content h3:contains("Pro Tips") {
+    @apply bg-amber-600 text-white;
+  }
+  
+  /* FAQ styling */
+  .recipe-content h2:contains("FAQ") {
+    @apply bg-indigo-600 text-white;
+  }
+  
+  /* Conclusion styling */
+  .recipe-content h2:contains("Conclusion") {
+    @apply bg-green-600 text-white;
+  }
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+.focus\:ring-yellow-400:focus {
+  --tw-ring-color: #fbbf24;
+}
+
+/* Custom button hover effects */
+.btn-hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom checkbox and radio styles */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .recipe-content {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .recipe-content h1,
+  .recipe-content h2,
+  .recipe-content h3 {
+    break-after: avoid;
+  }
+  
+  .recipe-content ul,
+  .recipe-content ol {
+    break-inside: avoid;
+  }
+}
+
+/* Mobile navigation improvements */
+@media (max-width: 768px) {
+  .mobile-menu {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .mobile-menu.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  
+  .mobile-menu:not(.hidden) {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .bg-purple-100 {
+    background-color: #e5e7eb;
+  }
+  
+  .text-purple-600 {
+    color: #1f2937;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}

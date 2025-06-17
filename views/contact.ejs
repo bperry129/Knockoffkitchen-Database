@@ -1,0 +1,191 @@
+<%- include('layout', { body: `
+    <!-- Page Header -->
+    <div class="bg-purple-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold mb-4">Contact Us</h1>
+            <p class="text-xl text-purple-100">
+                Get in touch with the Knockoff Kitchen team. We'd love to hear from you!
+            </p>
+        </div>
+    </div>
+
+    <!-- Contact Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Info -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="bg-purple-100 rounded-lg p-3 mr-4">
+                            <span class="text-xl">📧</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Email Us</h3>
+                            <p class="text-gray-600">Send us your questions, recipe requests, or feedback</p>
+                            <a href="mailto:hello@knockoffkitchen.com" class="text-purple-600 hover:text-purple-800">
+                                hello@knockoffkitchen.com
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-purple-100 rounded-lg p-3 mr-4">
+                            <span class="text-xl">💡</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Recipe Requests</h3>
+                            <p class="text-gray-600">
+                                Have a favorite dish you'd like us to recreate? Let us know! We're always 
+                                looking for new copycat recipes to add to our collection.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-purple-100 rounded-lg p-3 mr-4">
+                            <span class="text-xl">🐛</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Report Issues</h3>
+                            <p class="text-gray-600">
+                                Found a bug or issue with our website? Let us know so we can fix it and 
+                                improve your experience.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="bg-purple-100 rounded-lg p-3 mr-4">
+                            <span class="text-xl">🤝</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Partnerships</h3>
+                            <p class="text-gray-600">
+                                Interested in collaborating or partnering with Knockoff Kitchen? 
+                                We'd love to explore opportunities together.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Form -->
+            <div class="bg-gray-50 rounded-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                            Your Name
+                        </label>
+                        <input type="text" 
+                               id="name" 
+                               name="name" 
+                               required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                        </label>
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+                            Subject
+                        </label>
+                        <select id="subject" 
+                                name="subject" 
+                                required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">Select a topic...</option>
+                            <option value="recipe-request">Recipe Request</option>
+                            <option value="feedback">General Feedback</option>
+                            <option value="bug-report">Bug Report</option>
+                            <option value="partnership">Partnership Inquiry</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                            Message
+                        </label>
+                        <textarea id="message" 
+                                  name="message" 
+                                  rows="5" 
+                                  required
+                                  placeholder="Tell us about your recipe request, feedback, or question..."
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Send Message
+                    </button>
+                </form>
+                
+                <p class="text-sm text-gray-500 mt-4 text-center">
+                    We typically respond within 24-48 hours during business days.
+                </p>
+            </div>
+        </div>
+        
+        <!-- FAQ Section -->
+        <div class="mt-16">
+            <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">
+                Frequently Asked Questions
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        How do you test your recipes?
+                    </h3>
+                    <p class="text-gray-600">
+                        Each recipe goes through multiple rounds of testing in home kitchens to ensure 
+                        they produce results that taste as close to the original as possible.
+                    </p>
+                </div>
+                
+                <div class="bg-white border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Can I submit my own copycat recipe?
+                    </h3>
+                    <p class="text-gray-600">
+                        Absolutely! We love community contributions. Send us your tested copycat recipes 
+                        and we'll consider featuring them on the site.
+                    </p>
+                </div>
+                
+                <div class="bg-white border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Do you take recipe requests?
+                    </h3>
+                    <p class="text-gray-600">
+                        Yes! While we can't guarantee we'll be able to recreate every request, 
+                        we do our best to tackle popular dishes that our community wants to see.
+                    </p>
+                </div>
+                
+                <div class="bg-white border rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                        Are your recipes copyrighted?
+                    </h3>
+                    <p class="text-gray-600">
+                        Our recipes are original recreations based on taste and analysis. 
+                        You're free to use them for personal cooking and sharing with friends and family.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+` }) %>

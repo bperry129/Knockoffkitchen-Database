@@ -1,0 +1,96 @@
+<%- include('layout', { body: `
+    <!-- Page Header -->
+    <div class="bg-purple-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold mb-4">Recipe Brands</h1>
+            <p class="text-xl text-purple-100">
+                Browse recipes by brand. Find copycat recipes from your favorite restaurants and food companies.
+            </p>
+        </div>
+    </div>
+
+    <!-- Brands Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            ${brands.map(brand => `
+                <a href="/recipes?brand=${brand.brandSlug}" 
+                   class="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200">
+                    <div class="text-center">
+                        <!-- Brand Icon/Emoji -->
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-200 transition-colors">
+                            <span class="text-2xl">🏪</span>
+                        </div>
+                        
+                        <!-- Brand Name -->
+                        <h2 class="text-xl font-bold text-gray-900 group-hover:text-purple-700 mb-2">
+                            ${brand._id}
+                        </h2>
+                        
+                        <!-- Recipe Count -->
+                        <p class="text-gray-600 mb-4">
+                            ${brand.count.toLocaleString()} Recipe${brand.count !== 1 ? 's' : ''}
+                        </p>
+                        
+                        <!-- View Button -->
+                        <span class="inline-flex items-center px-4 py-2 bg-purple-600 group-hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+                            View Recipes →
+                        </span>
+                    </div>
+                </a>
+            `).join('')}
+        </div>
+        
+        ${brands.length === 0 ? `
+            <div class="text-center py-16">
+                <div class="text-6xl mb-4">🏪</div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No brands found</h3>
+                <p class="text-gray-600 mb-6">
+                    It looks like we don't have any recipe brands in our database yet.
+                </p>
+                <a href="/recipes" class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+                    Browse All Recipes
+                </a>
+            </div>
+        ` : ''}
+    </div>
+
+    <!-- Popular Brands Section -->
+    ${brands.length > 0 ? `
+        <div class="bg-gray-50 py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                        Popular Brands
+                    </h2>
+                    <p class="text-xl text-gray-600">
+                        The most loved brands with the most copycat recipes
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${brands.slice(0, 6).map(brand => `
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">
+                                    ${brand._id}
+                                </h3>
+                                <span class="bg-purple-100 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full">
+                                    ${brand.count} recipes
+                                </span>
+                            </div>
+                            
+                            <p class="text-gray-600 mb-4">
+                                Discover homemade versions of your favorite ${brand._id} items.
+                            </p>
+                            
+                            <a href="/recipes?brand=${brand.brandSlug}" 
+                               class="text-purple-600 hover:text-purple-800 font-semibold">
+                                Explore ${brand._id} recipes →
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    ` : ''}
+` }) %>

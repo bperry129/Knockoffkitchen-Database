@@ -1,0 +1,156 @@
+<%- include('layout', { body: `
+    <!-- Recipe Header -->
+    <article class="bg-white">
+        <!-- Breadcrumb -->
+        <div class="bg-gray-100 py-4">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <nav class="text-sm text-gray-600">
+                    <a href="/" class="hover:text-purple-600">Home</a>
+                    <span class="mx-2">›</span>
+                    <a href="/recipes" class="hover:text-purple-600">Recipes</a>
+                    <span class="mx-2">›</span>
+                    <a href="/recipes?brand=${recipe.brandSlug}" class="hover:text-purple-600">${recipe.brand}</a>
+                    <span class="mx-2">›</span>
+                    <span class="text-gray-900">${recipe.title}</span>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Recipe Hero -->
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Recipe Image -->
+                <div class="lg:order-2">
+                    ${recipe.image ? `
+                        <img src="${recipe.image}" 
+                             alt="${recipe.imageAlt || recipe.title}" 
+                             class="w-full h-64 lg:h-80 object-cover rounded-lg shadow-lg">
+                    ` : `
+                        <div class="w-full h-64 lg:h-80 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg shadow-lg flex items-center justify-center">
+                            <span class="text-6xl">🍽️</span>
+                        </div>
+                    `}
+                </div>
+
+                <!-- Recipe Info -->
+                <div class="lg:order-1">
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="bg-purple-100 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full">
+                            ${recipe.brand}
+                        </span>
+                        <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-3 py-1 rounded-full">
+                            ${recipe.foodType}
+                        </span>
+                        ${recipe.difficulty ? `
+                            <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+                                ${recipe.difficulty}
+                            </span>
+                        ` : ''}
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        ${recipe.title}
+                    </h1>
+
+                    <!-- Description -->
+                    ${recipe.description ? `
+                        <p class="text-lg text-gray-600 mb-6">
+                            ${recipe.description}
+                        </p>
+                    ` : ''}
+
+                    <!-- Recipe Meta -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        ${recipe.yield ? `
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <div class="text-2xl mb-1">🍽️</div>
+                                <div class="text-sm text-gray-600">Yield</div>
+                                <div class="font-semibold">${recipe.yield}</div>
+                            </div>
+                        ` : ''}
+                        ${recipe.prepTime ? `
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <div class="text-2xl mb-1">⏱️</div>
+                                <div class="text-sm text-gray-600">Prep Time</div>
+                                <div class="font-semibold">${recipe.prepTime}</div>
+                            </div>
+                        ` : ''}
+                        ${recipe.cookTime ? `
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <div class="text-2xl mb-1">🔥</div>
+                                <div class="text-sm text-gray-600">Cook Time</div>
+                                <div class="font-semibold">${recipe.cookTime}</div>
+                            </div>
+                        ` : ''}
+                        ${recipe.totalTime ? `
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <div class="text-2xl mb-1">⌚</div>
+                                <div class="text-sm text-gray-600">Total Time</div>
+                                <div class="font-semibold">${recipe.totalTime}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Content -->
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2">
+                    <!-- Recipe Content from Markdown -->
+                    ${recipe.contentMarkdown ? `
+                        <div class="recipe-content space-y-8">
+                            ${recipe.parsedContent || ''}
+                        </div>
+                    ` : `
+                        <div class="text-center py-16">
+                            <div class="text-6xl mb-4">📝</div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Recipe content not available</h3>
+                            <p class="text-gray-600">
+                                This recipe is currently being processed.
+                            </p>
+                        </div>
+                    `}
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <!-- Related Recipes -->
+                    ${relatedRecipes && relatedRecipes.length > 0 ? `
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">
+                                More ${recipe.brand} Recipes
+                            </h3>
+                            <div class="space-y-4">
+                                ${relatedRecipes.map(related => `
+                                    <a href="/recipes/${related.brandSlug}/${related.slug}" class="block group">
+                                        <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+                                            <h4 class="font-semibold text-gray-900 group-hover:text-purple-700 mb-1 line-clamp-2">
+                                                ${related.title}
+                                            </h4>
+                                            <p class="text-sm text-gray-500">
+                                                ${related.foodType}
+                                                ${related.totalTime ? ` • ${related.totalTime}` : ''}
+                                            </p>
+                                        </div>
+                                    </a>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="mt-4">
+                                <a href="/recipes?brand=${recipe.brandSlug}" 
+                                   class="text-purple-600 hover:text-purple-800 font-semibold text-sm">
+                                    View all ${recipe.brand} recipes →
+                                </a>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    </article>
+` }) %>

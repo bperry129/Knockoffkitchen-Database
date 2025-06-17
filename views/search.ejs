@@ -1,0 +1,154 @@
+<%- include('layout', { body: `
+    <!-- Page Header -->
+    <div class="bg-purple-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold mb-4">Search Recipes</h1>
+            <p class="text-xl text-purple-100 mb-6">
+                ${query ? `Search results for "${query}"` : 'Search our collection of copycat recipes'}
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="max-w-2xl mx-auto">
+                <form action="/search" method="GET" class="flex">
+                    <input type="text" 
+                           name="q" 
+                           placeholder="Search recipes, brands, or ingredients..." 
+                           value="${query || ''}"
+                           class="flex-1 px-6 py-4 text-lg rounded-l-lg border-0 text-gray-900 focus:ring-4 focus:ring-yellow-400">
+                    <button type="submit" 
+                            class="bg-yellow-400 hover:bg-yellow-500 text-purple-900 px-8 py-4 rounded-r-lg font-semibold text-lg transition-colors">
+                        🔍 Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        ${query ? `
+            <!-- Results Header -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                    ${totalResults.toLocaleString()} Result${totalResults !== 1 ? 's' : ''} for "${query}"
+                </h2>
+                ${totalResults > 0 ? `
+                    <p class="text-gray-600">
+                        Showing page ${currentPage} of ${totalPages}
+                    </p>
+                ` : ''}
+            </div>
+
+            <!-- Recipe Grid -->
+            ${recipes.length > 0 ? `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    ${recipes.map(recipe => `
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                            ${recipe.image ? `
+                                <img src="${recipe.image}" 
+                                     alt="${recipe.imageAlt || recipe.title}" 
+                                     class="w-full h-48 object-cover">
+                            ` : `
+                                <div class="w-full h-48 bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+                                    <span class="text-4xl">🍽️</span>
+                                </div>
+                            `}
+                            
+                            <div class="p-4">
+                                <div class="flex flex-wrap gap-1 mb-3">
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">
+                                        ${recipe.brand}
+                                    </span>
+                                    <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">
+                                        ${recipe.category}
+                                    </span>
+                                </div>
+                                
+                                <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
+                                    <a href="${recipe.url}" class="hover:text-purple-700">
+                                        ${recipe.title}
+                                    </a>
+                                </h3>
+                                
+                                ${recipe.description ? `
+                                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                                        ${recipe.description}
+                                    </p>
+                                ` : ''}
+                                
+                                <a href="${recipe.url}" 
+                                   class="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded transition-colors">
+                                    View Recipe
+                                </a>
+                            </div>
+                        </article>
+                    `).join('')}
+                </div>
+            ` : `
+                <div class="text-center py-16">
+                    <div class="text-6xl mb-4">🔍</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No recipes found</h3>
+                    <p class="text-gray-600 mb-6">
+                        We couldn't find any recipes matching "${query}". Try different keywords or browse our categories.
+                    </p>
+                    <div class="space-x-4">
+                        <a href="/recipes" class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+                            Browse All Recipes
+                        </a>
+                        <a href="/categories" class="inline-flex items-center px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition-colors">
+                            Browse Categories
+                        </a>
+                    </div>
+                </div>
+            `}
+
+            <!-- Pagination -->
+            ${totalPages > 1 ? `
+                <div class="mt-12">
+                    <nav class="flex justify-center">
+                        <div class="flex space-x-2">
+                            ${currentPage > 1 ? `
+                                <a href="/search?q=${encodeURIComponent(query)}&page=${currentPage - 1}" 
+                                   class="px-3 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-md">
+                                    ← Previous
+                                </a>
+                            ` : ''}
+                            
+                            ${Array.from({length: Math.min(5, totalPages)}, (_, i) => {
+                                const page = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                                if (page <= totalPages) {
+                                    return `
+                                        <a href="/search?q=${encodeURIComponent(query)}&page=${page}" 
+                                           class="px-3 py-2 ${page === currentPage ? 
+                                               'bg-purple-600 text-white' : 
+                                               'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                           } rounded-md">
+                                            ${page}
+                                        </a>
+                                    `;
+                                }
+                                return '';
+                            }).join('')}
+                            
+                            ${currentPage < totalPages ? `
+                                <a href="/search?q=${encodeURIComponent(query)}&page=${currentPage + 1}" 
+                                   class="px-3 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-md">
+                                    Next →
+                                </a>
+                            ` : ''}
+                        </div>
+                    </nav>
+                </div>
+            ` : ''}
+        ` : `
+            <!-- No Search Query -->
+            <div class="text-center py-16">
+                <div class="text-6xl mb-4">🔍</div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Start searching for recipes</h3>
+                <p class="text-gray-600 mb-6">
+                    Enter a search term above to find your favorite copycat recipes.
+                </p>
+            </div>
+        `}
+    </div>
+` }) %>

@@ -1,0 +1,43 @@
+<%- include('layout', { body: `
+    <!-- Page Header -->
+    <div class="bg-purple-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold mb-4">Recipe Categories</h1>
+            <p class="text-xl text-purple-100">
+                Browse recipes by category. Find appetizers, main courses, desserts, and more copycat recipes.
+            </p>
+        </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            ${categories.map(category => `
+                <a href="/recipes?category=${category.categorySlug}" 
+                   class="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200">
+                    <div class="text-center">
+                        <!-- Category Icon -->
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-200 transition-colors">
+                            <span class="text-2xl">🏷️</span>
+                        </div>
+                        
+                        <!-- Category Name -->
+                        <h2 class="text-xl font-bold text-gray-900 group-hover:text-purple-700 mb-2">
+                            ${category._id}
+                        </h2>
+                        
+                        <!-- Recipe Count -->
+                        <p class="text-gray-600 mb-4">
+                            ${category.count.toLocaleString()} Recipe${category.count !== 1 ? 's' : ''}
+                        </p>
+                        
+                        <!-- View Button -->
+                        <span class="inline-flex items-center px-4 py-2 bg-yellow-500 group-hover:bg-yellow-600 text-white font-semibold rounded-lg transition-colors">
+                            View Recipes →
+                        </span>
+                    </div>
+                </a>
+            `).join('')}
+        </div>
+    </div>
+` }) %>

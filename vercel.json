@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "knockoff-kitchen",
+  "buildCommand": "npm run build",
   "builds": [
     {
       "src": "server.js",

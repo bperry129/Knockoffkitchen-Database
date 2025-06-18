@@ -8,7 +8,8 @@
     "dev": "nodemon server.js",
     "build": "npm run build:css",
     "build:css": "tailwindcss -i ./public/css/input.css -o ./public/css/style.css --minify",
-    "watch:css": "tailwindcss -i ./public/css/input.css -o ./public/css/style.css --watch"
+    "watch:css": "tailwindcss -i ./public/css/input.css -o ./public/css/style.css --watch",
+    "postinstall": "npm run build:css"
   },
   "dependencies": {
     "compression": "^1.7.4",

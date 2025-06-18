@@ -80,8 +80,8 @@ Thumbs.db
 dist/
 build/
 
-# Tailwind CSS compiled output
-public/css/style.css
+# Tailwind CSS compiled output (comment out to deploy built CSS)
+# public/css/style.css
 
 # Temporary files
 tmp/

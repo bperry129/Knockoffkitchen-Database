@@ -389,6 +389,27 @@
             }
         });
         
+        // Image error handling - replace broken images with placeholder
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    if (this.src !== '/images/placeholder.png') {
+                        this.src = '/images/placeholder.png';
+                        this.alt = 'Recipe placeholder image';
+                    }
+                });
+                
+                // Also check if image loads but returns 404
+                img.addEventListener('load', function() {
+                    if (this.naturalWidth === 0) {
+                        this.src = '/images/placeholder.png';
+                        this.alt = 'Recipe placeholder image';
+                    }
+                });
+            });
+        });
+        
         // Search functionality
         document.addEventListener('DOMContentLoaded', function() {
             const searchForms = document.querySelectorAll('form[action="/search"]');

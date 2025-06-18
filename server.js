@@ -116,6 +116,23 @@ async function getCachedStats() {
   return stats;
 }
 
+// Format recipes with URLs for the template
+function formatRecipe(recipe) {
+  // Ensure brandSlug and slug exist, generate if missing
+  const brandSlug = recipe.brandSlug || (recipe.brand ? recipe.brand.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'unknown-brand');
+  const slug = recipe.slug || (recipe.title ? recipe.title.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'unknown-recipe');
+  
+  return {
+    ...recipe,
+    brandSlug,
+    slug,
+    url: `/recipes/${brandSlug}/${slug}`,
+    category: recipe.foodType || 'Recipe',
+    // Ensure image has placeholder fallback
+    image: recipe.image || '/images/placeholder.png'
+  };
+}
+
 async function getCachedHomePageData() {
   const cacheKey = 'homepage_data';
   let data = cache.get(cacheKey);
@@ -137,13 +154,6 @@ async function getCachedHomePageData() {
         }
       }
     ]);
-    
-    // Format recipes with URLs for the template
-    const formatRecipe = (recipe) => ({
-      ...recipe,
-      url: `/recipes/${recipe.brandSlug}/${recipe.slug}`,
-      category: recipe.foodType || 'Recipe'
-    });
     
     data = {
       featuredRecipes: (result[0].featured || []).map(formatRecipe),
@@ -602,17 +612,8 @@ app.get('/search', async (req, res) => {
         .sort({ score: { $meta: "textScore" } })
         .limit(50);
         
-        // Format recipes for the template
-        recipes = rawRecipes.map(recipe => ({
-          _id: recipe._id,
-          title: recipe.title,
-          description: recipe.description,
-          brand: recipe.brand,
-          category: recipe.foodType || 'Recipe',
-          image: recipe.image,
-          imageAlt: recipe.imageAlt || recipe.title,
-          url: `/recipes/${recipe.brandSlug}/${recipe.slug}`
-        }));
+        // Format recipes for the template using the formatRecipe function
+        recipes = rawRecipes.map(formatRecipe);
         
         searchData = {
           recipes,

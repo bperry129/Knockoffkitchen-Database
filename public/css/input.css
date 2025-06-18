@@ -25,24 +25,30 @@
     @apply max-w-none;
   }
   
+  /* Professional heading styles - remove duplicate H1 from markdown */
   .recipe-content h1 {
-    @apply text-3xl font-bold text-gray-900 mb-6 border-b-2 border-purple-200 pb-4 bg-gradient-to-r from-purple-50 to-white p-4 rounded-lg;
+    display: none; /* Hide H1 since we show title separately */
   }
   
   .recipe-content h2 {
-    @apply text-2xl font-bold text-white mb-4 mt-8 bg-purple-700 px-4 py-3 rounded-lg shadow-md;
+    @apply text-2xl font-bold text-slate-800 mb-6 mt-10 first:mt-0 pb-3 border-b-2 border-slate-200 bg-gradient-to-r from-slate-50 to-transparent px-6 py-4 rounded-lg;
   }
   
   .recipe-content h3 {
-    @apply text-xl font-semibold text-purple-800 mb-3 mt-6 border-l-4 border-purple-400 pl-4 py-2 bg-purple-50 rounded-r-lg;
+    @apply text-xl font-semibold text-slate-700 mb-4 mt-8 flex items-center;
+  }
+  
+  .recipe-content h3::before {
+    content: "";
+    @apply w-1 h-6 bg-orange-500 mr-3 rounded-full;
   }
   
   .recipe-content h4 {
-    @apply text-lg font-semibold text-gray-800 mb-2 mt-4 border-b border-gray-200 pb-1;
+    @apply text-lg font-semibold text-slate-600 mb-3 mt-6 uppercase tracking-wide text-sm;
   }
   
   .recipe-content p {
-    @apply text-gray-700 leading-relaxed mb-4 text-base;
+    @apply text-slate-700 leading-relaxed mb-4 text-lg;
   }
   
   /* Special styling for category */
@@ -51,32 +57,66 @@
   }
   
   .recipe-content ul {
-    @apply space-y-3 mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200;
+    @apply space-y-4 mb-8 bg-slate-50 border border-slate-200 rounded-xl p-6;
   }
   
   .recipe-content ol {
-    @apply space-y-3 mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200;
+    @apply space-y-4 mb-8 bg-white border border-slate-200 rounded-xl p-6 shadow-sm;
   }
   
   .recipe-content li {
-    @apply text-gray-700 leading-relaxed pl-2;
+    @apply text-slate-700 leading-relaxed text-lg;
   }
   
   .recipe-content ul li {
-    @apply relative flex items-start;
+    @apply relative flex items-start pl-8;
   }
   
   .recipe-content ul li::before {
-    content: "🔸";
-    @apply mr-2 text-purple-600 flex-shrink-0 mt-0.5;
+    content: "";
+    @apply absolute left-0 top-2 w-2 h-2 bg-orange-500 rounded-full flex-shrink-0;
+  }
+  
+  .recipe-content ol {
+    counter-reset: step-counter;
   }
   
   .recipe-content ol li {
-    @apply list-decimal ml-4 pl-2;
+    @apply relative pl-12 list-none;
+    counter-increment: step-counter;
   }
   
-  .recipe-content ol li::marker {
-    @apply text-blue-600 font-bold;
+  .recipe-content ol li::before {
+    content: counter(step-counter);
+    @apply absolute left-0 top-1 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-md;
+  }
+  
+  /* Fix nested lists and mixed content formatting */
+  .recipe-content li p {
+    @apply mb-2 text-slate-700;
+  }
+  
+  .recipe-content li strong {
+    @apply text-slate-900 font-semibold;
+  }
+  
+  /* Clean up any nested bullet points */
+  .recipe-content ol li ol,
+  .recipe-content ul li ul,
+  .recipe-content ol li ul,
+  .recipe-content ul li ol {
+    @apply mt-3 ml-0 pl-8 space-y-2;
+  }
+  
+  .recipe-content ol li ol li::before,
+  .recipe-content ul li ul li::before {
+    @apply w-4 h-4 bg-slate-400;
+  }
+  
+  /* Remove any stray formatting that causes messy layout */
+  .recipe-content li > div,
+  .recipe-content li > span {
+    @apply inline;
   }
   
   /* Enhanced table styling for nutrition facts */

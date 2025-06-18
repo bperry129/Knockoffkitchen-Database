@@ -13,7 +13,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             ${brands.map(brand => `
-                <a href="/recipes?brand=${brand.brandSlug}" 
+                <a href="/brands/${brand._id.toLowerCase().replace(/[^a-z0-9]/g, '-')}/" 
                    class="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200">
                     <div class="text-center">
                         <!-- Brand Icon/Emoji -->
@@ -83,7 +83,7 @@
                                 Discover homemade versions of your favorite ${brand._id} items.
                             </p>
                             
-                            <a href="/recipes?brand=${brand.brandSlug}" 
+                            <a href="/brands/${brand._id.toLowerCase().replace(/[^a-z0-9]/g, '-')}/" 
                                class="text-purple-600 hover:text-purple-800 font-semibold">
                                 Explore ${brand._id} recipes →
                             </a>

@@ -109,8 +109,8 @@ async function getCachedStats() {
       totalCategories: result[0].categories[0]?.count || 0
     };
     
-    // Cache for 24 hours to reduce database hits  
-    cache.set(cacheKey, stats, 1440);
+    // Cache for 2 hours to reduce database hits
+    cache.set(cacheKey, stats, 120);
   }
   
   return stats;
@@ -138,20 +138,13 @@ async function getCachedHomePageData() {
       }
     ]);
     
-    // Format recipes with URLs for the template
-    const formatRecipe = (recipe) => ({
-      ...recipe,
-      url: `/recipes/${recipe.brandSlug}/${recipe.slug}`,
-      category: recipe.foodType || 'Recipe'
-    });
-    
     data = {
-      featuredRecipes: (result[0].featured || []).map(formatRecipe),
-      recentRecipes: (result[0].recent || []).map(formatRecipe)
+      featuredRecipes: result[0].featured || [],
+      recentRecipes: result[0].recent || []
     };
     
-    // Cache for 24 hours (daily refresh)
-    cache.set(cacheKey, data, 1440);
+    // Cache for 30 minutes
+    cache.set(cacheKey, data, 30);
   }
   
   return data;
@@ -169,8 +162,8 @@ async function getCachedBrands() {
       { $sort: { count: -1 } }
     ]);
     
-    // Cache for 24 hours (daily refresh)
-    cache.set(cacheKey, brands, 1440);
+    // Cache for 4 hours
+    cache.set(cacheKey, brands, 240);
   }
   
   return brands;
@@ -193,8 +186,8 @@ async function getCachedCategories() {
       categorySlug: category._id ? category._id.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'unknown'
     }));
     
-    // Cache for 24 hours (daily refresh)
-    cache.set(cacheKey, categoriesWithSlugs, 1440);
+    // Cache for 4 hours
+    cache.set(cacheKey, categoriesWithSlugs, 240);
   }
   
   return categories;
@@ -365,15 +358,14 @@ app.get('/recipes', async (req, res) => {
         totalPages: Math.ceil((result.totalCount[0]?.count || 0) / limit)
       };
       
-      // Cache for 4 hours (recipes don't change frequently)
-      cache.set(cacheKey, cachedData, 240);
+      // Cache for 15 minutes
+      cache.set(cacheKey, cachedData, 15);
     }
     
-    // Get filter options and stats (cached separately)
-    const [brands, categories, stats] = await Promise.all([
+    // Get filter options (cached separately)
+    const [brands, categories] = await Promise.all([
       getCachedBrands(),
-      getCachedCategories(),
-      getCachedStats()
+      getCachedCategories()
     ]);
     
     res.render('recipes', {
@@ -387,17 +379,14 @@ app.get('/recipes', async (req, res) => {
       currentPage: page,
       selectedBrand: req.query.brand || '',
       selectedCategory: req.query.category || '',
-      counts: stats,
       currentRoute: 'recipes'
     });
   } catch (error) {
     console.error('Error fetching recipes:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
     res.status(500).render('error', {
       title: 'Error - Knockoff Kitchen',
       description: 'An error occurred while loading recipes.',
       error: 'Failed to load recipes. Please try again later.',
-      counts: stats,
       currentRoute: 'recipes'
     });
   }
@@ -406,26 +395,20 @@ app.get('/recipes', async (req, res) => {
 // OPTIMIZED Categories with caching
 app.get('/categories', async (req, res) => {
   try {
-    const [categories, stats] = await Promise.all([
-      getCachedCategories(),
-      getCachedStats()
-    ]);
+    const categories = await getCachedCategories();
 
     res.render('categories', {
       title: 'Recipe Categories - Knockoff Kitchen',
       description: 'Browse our recipe categories. Find appetizers, main courses, desserts, and more copycat recipes.',
       categories,
-      counts: stats,
       currentRoute: 'categories'
     });
   } catch (error) {
     console.error('Error fetching categories:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
     res.status(500).render('error', {
       title: 'Error - Knockoff Kitchen',
       description: 'An error occurred while loading categories.',
       error: 'Failed to load categories. Please try again later.',
-      counts: stats,
       currentRoute: 'categories'
     });
   }
@@ -434,26 +417,20 @@ app.get('/categories', async (req, res) => {
 // OPTIMIZED Brands with caching
 app.get('/brands', async (req, res) => {
   try {
-    const [brands, stats] = await Promise.all([
-      getCachedBrands(),
-      getCachedStats()
-    ]);
+    const brands = await getCachedBrands();
 
     res.render('brands', {
       title: 'Recipe Brands - Knockoff Kitchen',
       description: 'Browse recipes by brand. Find copycat recipes from your favorite restaurants and food companies.',
       brands,
-      counts: stats,
       currentRoute: 'brands'
     });
   } catch (error) {
     console.error('Error fetching brands:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
     res.status(500).render('error', {
       title: 'Error - Knockoff Kitchen',
       description: 'An error occurred while loading brands.',
       error: 'Failed to load brands. Please try again later.',
-      counts: stats,
       currentRoute: 'brands'
     });
   }
@@ -473,39 +450,25 @@ app.get('/search', async (req, res) => {
       
       if (!searchData) {
         console.log('Performing fresh search...');
-        const rawRecipes = await Recipe.find(
+        recipes = await Recipe.find(
           { $text: { $search: query } },
           { score: { $meta: "textScore" } }
         )
         .sort({ score: { $meta: "textScore" } })
         .limit(50);
         
-        // Format recipes for the template
-        recipes = rawRecipes.map(recipe => ({
-          _id: recipe._id,
-          title: recipe.title,
-          description: recipe.description,
-          brand: recipe.brand,
-          category: recipe.foodType || 'Recipe',
-          image: recipe.image,
-          imageAlt: recipe.imageAlt || recipe.title,
-          url: `/recipes/${recipe.brandSlug}/${recipe.slug}`
-        }));
-        
         searchData = {
           recipes,
           totalResults: recipes.length
         };
         
-        // Cache search results for 4 hours
-        cache.set(cacheKey, searchData, 240);
+        // Cache search results for 10 minutes
+        cache.set(cacheKey, searchData, 10);
       } else {
         recipes = searchData.recipes;
         totalResults = searchData.totalResults;
       }
     }
-    
-    const stats = await getCachedStats();
     
     res.render('search', {
       title: query ? `Search Results for "${query}" - Knockoff Kitchen` : 'Search Recipes - Knockoff Kitchen',
@@ -513,19 +476,14 @@ app.get('/search', async (req, res) => {
       recipes,
       query,
       totalResults,
-      totalPages: 1,
-      currentPage: 1,
-      counts: stats,
       currentRoute: 'search'
     });
   } catch (error) {
     console.error('Error performing search:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
     res.status(500).render('error', {
       title: 'Error - Knockoff Kitchen',
       description: 'An error occurred while searching.',
       error: 'Search failed. Please try again later.',
-      counts: stats,
       currentRoute: 'search'
     });
   }
@@ -546,12 +504,10 @@ app.get('/recipes/:brandSlug/:slug', async (req, res) => {
       });
       
       if (!recipe) {
-        const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
         return res.status(404).render('error', {
           title: 'Recipe Not Found - Knockoff Kitchen',
           description: 'The requested recipe could not be found.',
           error: 'Recipe not found. It may have been moved or deleted.',
-          counts: stats,
           currentRoute: 'recipes'
         });
       }
@@ -566,11 +522,9 @@ app.get('/recipes/:brandSlug/:slug', async (req, res) => {
       
       recipeData = { recipe, relatedRecipes };
       
-      // Cache recipe for 24 hours
-      cache.set(cacheKey, recipeData, 1440);
+      // Cache recipe for 60 minutes
+      cache.set(cacheKey, recipeData, 60);
     }
-    
-    const stats = await getCachedStats();
     
     res.render('recipe', {
       title: `${recipeData.recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()} - ${recipeData.recipe.brand} Copycat Recipe`,
@@ -578,212 +532,35 @@ app.get('/recipes/:brandSlug/:slug', async (req, res) => {
       recipe: recipeData.recipe,
       relatedRecipes: recipeData.relatedRecipes,
       url: `/recipes/${req.params.brandSlug}/${req.params.slug}`,
-      counts: stats,
       currentRoute: 'recipes'
     });
   } catch (error) {
     console.error('Error fetching recipe:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
     res.status(500).render('error', {
       title: 'Error - Knockoff Kitchen',
       description: 'An error occurred while loading the recipe.',
       error: 'Failed to load recipe. Please try again later.',
-      counts: stats,
       currentRoute: 'recipes'
-    });
-  }
-});
-
-// NEW: Clean URL for individual categories
-app.get('/categories/:categorySlug/', async (req, res) => {
-  try {
-    const categorySlug = req.params.categorySlug;
-    const page = parseInt(req.query.page) || 1;
-    const limit = 24;
-    const skip = (page - 1) * limit;
-    
-    // Create cache key based on category and page
-    const cacheKey = `category_${categorySlug}_${page}`;
-    let cachedData = cache.get(cacheKey);
-    
-    if (!cachedData) {
-      console.log(`Fetching fresh recipes for category: ${categorySlug}...`);
-      
-      // Convert slug back to category name for matching
-      const categoryName = categorySlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      
-      // Use aggregate to get both recipes and count in one query
-      const [result] = await Recipe.aggregate([
-        { $match: { foodType: { $regex: new RegExp(categoryName, 'i') } } },
-        {
-          $facet: {
-            recipes: [
-              { $sort: { createdAt: -1 } },
-              { $skip: skip },
-              { $limit: limit }
-            ],
-            totalCount: [
-              { $count: "count" }
-            ]
-          }
-        }
-      ]);
-      
-      cachedData = {
-        recipes: result.recipes,
-        totalRecipes: result.totalCount[0]?.count || 0,
-        totalPages: Math.ceil((result.totalCount[0]?.count || 0) / limit),
-        categoryName
-      };
-      
-      // Cache for 8 hours (categories don't change often)
-      cache.set(cacheKey, cachedData, 480);
-    }
-    
-    const stats = await getCachedStats();
-    
-    res.render('recipes', {
-      title: `${cachedData.categoryName} Recipes - Knockoff Kitchen`,
-      description: `Browse our collection of ${cachedData.categoryName.toLowerCase()} copycat recipes from popular brands.`,
-      recipes: cachedData.recipes,
-      brands: [],
-      categories: [],
-      totalRecipes: cachedData.totalRecipes,
-      totalPages: cachedData.totalPages,
-      currentPage: page,
-      selectedBrand: '',
-      selectedCategory: cachedData.categoryName,
-      counts: stats,
-      currentRoute: 'categories'
-    });
-  } catch (error) {
-    console.error('Error fetching category recipes:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
-    res.status(500).render('error', {
-      title: 'Error - Knockoff Kitchen',
-      description: 'An error occurred while loading category recipes.',
-      error: 'Failed to load category recipes. Please try again later.',
-      counts: stats,
-      currentRoute: 'categories'
-    });
-  }
-});
-
-// NEW: Clean URL for individual brands
-app.get('/brands/:brandSlug/', async (req, res) => {
-  try {
-    const brandSlug = req.params.brandSlug;
-    const page = parseInt(req.query.page) || 1;
-    const limit = 24;
-    const skip = (page - 1) * limit;
-    
-    // Create cache key based on brand and page
-    const cacheKey = `brand_${brandSlug}_${page}`;
-    let cachedData = cache.get(cacheKey);
-    
-    if (!cachedData) {
-      console.log(`Fetching fresh recipes for brand: ${brandSlug}...`);
-      
-      // Convert slug back to brand name for matching
-      const brandName = brandSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      
-      // Use aggregate to get both recipes and count in one query
-      const [result] = await Recipe.aggregate([
-        { $match: { brand: { $regex: new RegExp(brandName, 'i') } } },
-        {
-          $facet: {
-            recipes: [
-              { $sort: { createdAt: -1 } },
-              { $skip: skip },
-              { $limit: limit }
-            ],
-            totalCount: [
-              { $count: "count" }
-            ]
-          }
-        }
-      ]);
-      
-      cachedData = {
-        recipes: result.recipes,
-        totalRecipes: result.totalCount[0]?.count || 0,
-        totalPages: Math.ceil((result.totalCount[0]?.count || 0) / limit),
-        brandName
-      };
-      
-      // Cache for 8 hours (brands don't change often)  
-      cache.set(cacheKey, cachedData, 480);
-    }
-    
-    const stats = await getCachedStats();
-    
-    res.render('recipes', {
-      title: `${cachedData.brandName} Copycat Recipes - Knockoff Kitchen`,
-      description: `Browse our collection of ${cachedData.brandName} copycat recipes. Learn to make your favorite ${cachedData.brandName} dishes at home.`,
-      recipes: cachedData.recipes,
-      brands: [],
-      categories: [],
-      totalRecipes: cachedData.totalRecipes,
-      totalPages: cachedData.totalPages,
-      currentPage: page,
-      selectedBrand: cachedData.brandName,
-      selectedCategory: '',
-      counts: stats,
-      currentRoute: 'brands'
-    });
-  } catch (error) {
-    console.error('Error fetching brand recipes:', error);
-    const stats = await getCachedStats().catch(() => ({ totalRecipes: 23211, totalBrands: 268, totalCategories: 373 }));
-    res.status(500).render('error', {
-      title: 'Error - Knockoff Kitchen',
-      description: 'An error occurred while loading brand recipes.',
-      error: 'Failed to load brand recipes. Please try again later.',
-      counts: stats,
-      currentRoute: 'brands'
     });
   }
 });
 
 // About page
-app.get('/about', async (req, res) => {
-  try {
-    const stats = await getCachedStats();
-    res.render('about', {
-      title: 'About Us - Knockoff Kitchen',
-      description: 'Learn about Knockoff Kitchen and our mission to help you recreate your favorite brand-name foods at home.',
-      counts: stats,
-      currentRoute: 'about'
-    });
-  } catch (error) {
-    const stats = { totalRecipes: 23211, totalBrands: 268, totalCategories: 373 };
-    res.render('about', {
-      title: 'About Us - Knockoff Kitchen',
-      description: 'Learn about Knockoff Kitchen and our mission to help you recreate your favorite brand-name foods at home.',
-      counts: stats,
-      currentRoute: 'about'
-    });
-  }
+app.get('/about', (req, res) => {
+  res.render('about', {
+    title: 'About Us - Knockoff Kitchen',
+    description: 'Learn about Knockoff Kitchen and our mission to help you recreate your favorite brand-name foods at home.',
+    currentRoute: 'about'
+  });
 });
 
 // Contact page
-app.get('/contact', async (req, res) => {
-  try {
-    const stats = await getCachedStats();
-    res.render('contact', {
-      title: 'Contact Us - Knockoff Kitchen',
-      description: 'Get in touch with the Knockoff Kitchen team. We\'d love to hear from you!',
-      counts: stats,
-      currentRoute: 'contact'
-    });
-  } catch (error) {
-    const stats = { totalRecipes: 23211, totalBrands: 268, totalCategories: 373 };
-    res.render('contact', {
-      title: 'Contact Us - Knockoff Kitchen',
-      description: 'Get in touch with the Knockoff Kitchen team. We\'d love to hear from you!',
-      counts: stats,
-      currentRoute: 'contact'
-    });
-  }
+app.get('/contact', (req, res) => {
+  res.render('contact', {
+    title: 'Contact Us - Knockoff Kitchen',
+    description: 'Get in touch with the Knockoff Kitchen team. We\'d love to hear from you!',
+    currentRoute: 'contact'
+  });
 });
 
 // COST-SAVING: Cache clearing endpoint (for manual cache refresh)

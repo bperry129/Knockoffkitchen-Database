@@ -128,7 +128,7 @@
                             <!-- Title -->
                             <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
                                 <a href="/recipes/${recipe.brandSlug}/${recipe.slug}" class="hover:text-purple-700">
-                                    ${recipe.title}
+                                    ${recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()}
                                 </a>
                             </h3>
                             

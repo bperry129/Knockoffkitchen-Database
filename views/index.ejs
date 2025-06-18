@@ -69,17 +69,17 @@
                         
                         <div class="p-6">
                             <div class="flex items-center mb-2">
-                                <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">
+                                <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded">
                                     ${recipe.brand}
                                 </span>
-                                <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded ml-2">
+                                <span class="bg-slate-100 text-slate-800 text-xs font-semibold px-2 py-1 rounded ml-2">
                                     ${recipe.category}
                                 </span>
                             </div>
                             
                             <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
-                                <a href="${recipe.url}" class="hover:text-purple-700">
-                                    ${recipe.title}
+                                <a href="${recipe.url}" class="hover:text-orange-600">
+                                    ${recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()}
                                 </a>
                             </h3>
                             
@@ -96,7 +96,7 @@
                             </div>
                             
                             <a href="${recipe.url}" 
-                               class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors">
+                               class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors">
                                 View Recipe →
                             </a>
                         </div>
@@ -106,7 +106,7 @@
             
             <div class="text-center mt-12">
                 <a href="/recipes" 
-                   class="inline-flex items-center px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-purple-900 font-bold rounded-lg text-lg transition-colors">
+                   class="inline-flex items-center px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg text-lg transition-colors">
                     View All ${counts.totalRecipes.toLocaleString()} Recipes →
                 </a>
             </div>
@@ -142,14 +142,14 @@
                         
                         <div class="p-4">
                             <div class="flex items-center mb-2">
-                                <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">
+                                <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded">
                                     ${recipe.brand}
                                 </span>
                             </div>
                             
                             <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-                                <a href="${recipe.url}" class="hover:text-purple-700">
-                                    ${recipe.title}
+                                <a href="${recipe.url}" class="hover:text-orange-600">
+                                    ${recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()}
                                 </a>
                             </h3>
                             
@@ -159,7 +159,7 @@
                             </div>
                             
                             <a href="${recipe.url}" 
-                               class="text-purple-600 hover:text-purple-800 font-semibold text-sm">
+                               class="text-orange-600 hover:text-orange-700 font-semibold text-sm">
                                 View Recipe →
                             </a>
                         </div>
@@ -183,35 +183,35 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <a href="/recipes?category=appetizers" class="group bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors">
+                <a href="/recipes?category=appetizers" class="group bg-orange-50 hover:bg-orange-100 rounded-lg p-6 text-center transition-colors">
                     <div class="text-3xl mb-2">🥨</div>
-                    <div class="font-semibold text-gray-900 group-hover:text-purple-700">Appetizers</div>
+                    <div class="font-semibold text-gray-900 group-hover:text-orange-700">Appetizers</div>
                 </a>
-                <a href="/recipes?category=main-dishes" class="group bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors">
+                <a href="/recipes?category=main-dishes" class="group bg-orange-50 hover:bg-orange-100 rounded-lg p-6 text-center transition-colors">
                     <div class="text-3xl mb-2">🍽️</div>
-                    <div class="font-semibold text-gray-900 group-hover:text-purple-700">Main Dishes</div>
+                    <div class="font-semibold text-gray-900 group-hover:text-orange-700">Main Dishes</div>
                 </a>
-                <a href="/recipes?category=desserts" class="group bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors">
+                <a href="/recipes?category=desserts" class="group bg-orange-50 hover:bg-orange-100 rounded-lg p-6 text-center transition-colors">
                     <div class="text-3xl mb-2">🧁</div>
-                    <div class="font-semibold text-gray-900 group-hover:text-purple-700">Desserts</div>
+                    <div class="font-semibold text-gray-900 group-hover:text-orange-700">Desserts</div>
                 </a>
-                <a href="/recipes?category=drinks" class="group bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors">
+                <a href="/recipes?category=drinks" class="group bg-orange-50 hover:bg-orange-100 rounded-lg p-6 text-center transition-colors">
                     <div class="text-3xl mb-2">🥤</div>
-                    <div class="font-semibold text-gray-900 group-hover:text-purple-700">Drinks</div>
+                    <div class="font-semibold text-gray-900 group-hover:text-orange-700">Drinks</div>
                 </a>
-                <a href="/recipes?category=snacks" class="group bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors">
+                <a href="/recipes?category=snacks" class="group bg-orange-50 hover:bg-orange-100 rounded-lg p-6 text-center transition-colors">
                     <div class="text-3xl mb-2">🍿</div>
-                    <div class="font-semibold text-gray-900 group-hover:text-purple-700">Snacks</div>
+                    <div class="font-semibold text-gray-900 group-hover:text-orange-700">Snacks</div>
                 </a>
-                <a href="/recipes?category=candy" class="group bg-purple-50 hover:bg-purple-100 rounded-lg p-6 text-center transition-colors">
+                <a href="/recipes?category=candy" class="group bg-orange-50 hover:bg-orange-100 rounded-lg p-6 text-center transition-colors">
                     <div class="text-3xl mb-2">🍭</div>
-                    <div class="font-semibold text-gray-900 group-hover:text-purple-700">Candy</div>
+                    <div class="font-semibold text-gray-900 group-hover:text-orange-700">Candy</div>
                 </a>
             </div>
             
             <div class="text-center mt-12">
                 <a href="/categories" 
-                   class="inline-flex items-center px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-lg transition-colors">
+                   class="inline-flex items-center px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-lg text-lg transition-colors">
                     View All Categories →
                 </a>
             </div>
@@ -232,7 +232,7 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="text-center">
-                    <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                         <span class="text-2xl">📚</span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Huge Collection</h3>
@@ -242,7 +242,7 @@
                 </div>
                 
                 <div class="text-center">
-                    <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                         <span class="text-2xl">👨‍🍳</span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Easy Instructions</h3>
@@ -252,7 +252,7 @@
                 </div>
                 
                 <div class="text-center">
-                    <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <div class="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                         <span class="text-2xl">💰</span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Save Money</h3>

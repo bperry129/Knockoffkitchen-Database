@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title><%= title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() %></title>
     <meta name="description" content="<%= description %>">
     
     <!-- SEO Meta Tags -->
-    <meta property="og:title" content="<%= title %>">
+    <meta property="og:title" content="<%= title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() %>">
     <meta property="og:description" content="<%= description %>">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://knockoffkitchen.com<%= typeof url !== 'undefined' ? url : '' %>">
     <meta property="og:site_name" content="Knockoff Kitchen">
     
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<%= title %>">
+    <meta name="twitter:title" content="<%= title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() %>">
     <meta name="twitter:description" content="<%= description %>">
     
     <!-- Preload critical resources -->
@@ -31,7 +31,7 @@
     {
       "@context": "https://schema.org/",
       "@type": "Recipe",
-      "name": "<%= recipe.title %>",
+      "name": "<%= recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() %>",
       "description": "<%= recipe.description || '' %>",
       "author": {
         "@type": "Organization",
@@ -96,67 +96,58 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation -->
-    <nav class="bg-purple-900 shadow-lg">
+    <!-- Top Bar with Logo and Search -->
+    <div class="bg-slate-800 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <!-- Logo and brand -->
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
                 <div class="flex items-center">
                     <a href="/" class="flex-shrink-0 flex items-center">
                         <div class="border-2 border-yellow-400 px-3 py-1 rounded">
-                            <span class="text-white font-bold text-lg">KNOCKOFF</span>
-                            <span class="text-yellow-400 font-bold text-lg">KITCHEN</span>
+                            <span class="text-white font-bold text-xl">KNOCKOFF</span>
+                            <span class="text-yellow-400 font-bold text-xl">KITCHEN</span>
                         </div>
                     </a>
                     
-                    <div class="hidden md:flex items-center ml-6">
-                        <span class="bg-yellow-400 text-purple-900 px-3 py-1 rounded-full text-sm font-semibold flex items-center">
-                            📝 <span class="ml-1"><%= typeof counts !== 'undefined' && counts ? counts.totalRecipes.toLocaleString() : '23211' %> Homemade Recipes</span>
-                        </span>
+                    <div class="hidden lg:flex items-center ml-8">
+                        <div class="bg-slate-700 px-4 py-2 rounded-lg border border-slate-600">
+                            <span class="text-orange-400 font-semibold text-sm">
+                                <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 1a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                </svg>
+                                <%= typeof counts !== 'undefined' && counts ? counts.totalRecipes.toLocaleString() : '23,211' %> Recipes
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Search -->
-                <div class="flex-1 max-w-lg mx-8 hidden md:flex">
+                <div class="flex-1 max-w-2xl mx-8 hidden md:flex items-center">
                     <form action="/search" method="GET" class="w-full">
                         <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                            </div>
                             <input type="text" 
                                    name="q" 
-                                   placeholder="Search recipes, brands..." 
+                                   placeholder="Search thousands of copycat recipes..." 
                                    value="<%= typeof query !== 'undefined' ? query : '' %>"
-                                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                            <button type="submit" class="absolute right-2 top-2 text-gray-500 hover:text-gray-700">
-                                🔍
+                                   class="block w-full pl-10 pr-12 py-3 border border-slate-600 rounded-xl bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200">
+                            <button type="submit" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <div class="bg-orange-500 hover:bg-orange-600 rounded-lg px-3 py-1.5 transition-colors">
+                                    <span class="text-white text-sm font-medium">Search</span>
+                                </div>
                             </button>
                         </div>
                     </form>
                 </div>
-
-                <!-- Navigation links -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="/" class="text-white hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium <%= typeof currentRoute !== 'undefined' && currentRoute === 'home' ? 'text-yellow-400' : '' %>">
-                        🏠 Home
-                    </a>
-                    <a href="/recipes" class="text-white hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium <%= typeof currentRoute !== 'undefined' && currentRoute === 'recipes' ? 'text-yellow-400' : '' %>">
-                        📖 Recipes
-                    </a>
-                    <a href="/categories" class="text-white hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium <%= typeof currentRoute !== 'undefined' && currentRoute === 'categories' ? 'text-yellow-400' : '' %>">
-                        🏷️ Categories
-                    </a>
-                    <a href="/brands" class="text-white hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium <%= typeof currentRoute !== 'undefined' && currentRoute === 'brands' ? 'text-yellow-400' : '' %>">
-                        🏪 Brands
-                    </a>
-                    <a href="/about" class="text-white hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium <%= typeof currentRoute !== 'undefined' && currentRoute === 'about' ? 'text-yellow-400' : '' %>">
-                        ℹ️ About
-                    </a>
-                    <a href="/contact" class="text-white hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium <%= typeof currentRoute !== 'undefined' && currentRoute === 'contact' ? 'text-yellow-400' : '' %>">
-                        📧 Contact
-                    </a>
-                </div>
-
+                
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
-                    <button type="button" class="mobile-menu-button text-white hover:text-yellow-400 focus:outline-none focus:text-yellow-400">
+                    <button type="button" class="mobile-menu-button text-slate-300 hover:text-white focus:outline-none focus:text-white">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -164,25 +155,98 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="bg-slate-700 border-b border-slate-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center">
+                <!-- Navigation links -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/" class="group flex items-center px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-600 transition-all duration-200 <%= typeof currentRoute !== 'undefined' && currentRoute === 'home' ? 'text-orange-400 bg-slate-600' : '' %>">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                        </svg>
+                        <span class="font-medium">Home</span>
+                    </a>
+                    <a href="/recipes" class="group flex items-center px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-600 transition-all duration-200 <%= typeof currentRoute !== 'undefined' && currentRoute === 'recipes' ? 'text-orange-400 bg-slate-600' : '' %>">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                        </svg>
+                        <span class="font-medium">Recipes</span>
+                    </a>
+                    <a href="/categories" class="group flex items-center px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-600 transition-all duration-200 <%= typeof currentRoute !== 'undefined' && currentRoute === 'categories' ? 'text-orange-400 bg-slate-600' : '' %>">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="font-medium">Categories</span>
+                    </a>
+                    <a href="/brands" class="group flex items-center px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-600 transition-all duration-200 <%= typeof currentRoute !== 'undefined' && currentRoute === 'brands' ? 'text-orange-400 bg-slate-600' : '' %>">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="font-medium">Brands</span>
+                    </a>
+                    <a href="/about" class="group flex items-center px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-600 transition-all duration-200 <%= typeof currentRoute !== 'undefined' && currentRoute === 'about' ? 'text-orange-400 bg-slate-600' : '' %>">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="font-medium">About</span>
+                    </a>
+                    <a href="/contact" class="group flex items-center px-4 py-3 rounded-lg text-slate-300 hover:text-white hover:bg-slate-600 transition-all duration-200 <%= typeof currentRoute !== 'undefined' && currentRoute === 'contact' ? 'text-orange-400 bg-slate-600' : '' %>">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                        </svg>
+                        <span class="font-medium">Contact</span>
+                    </a>
+                </div>
+            </div>
+        </div>
 
         <!-- Mobile menu -->
-        <div class="mobile-menu hidden md:hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-purple-800">
+        <div class="mobile-menu hidden md:hidden border-t border-slate-700">
+            <div class="px-4 pt-4 pb-6 space-y-3 bg-slate-800">
                 <!-- Mobile search -->
                 <form action="/search" method="GET" class="mb-4">
-                    <input type="text" 
-                           name="q" 
-                           placeholder="Search recipes, brands..." 
-                           value="<%= typeof query !== 'undefined' ? query : '' %>"
-                           class="w-full px-3 py-2 rounded border border-gray-300 focus:ring-2 focus:ring-yellow-400">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <input type="text" 
+                               name="q" 
+                               placeholder="Search recipes..." 
+                               value="<%= typeof query !== 'undefined' ? query : '' %>"
+                               class="block w-full pl-10 pr-3 py-2 border border-slate-600 rounded-lg bg-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
                 </form>
                 
-                <a href="/" class="text-white hover:text-yellow-400 block px-3 py-2 rounded-md text-base font-medium">🏠 Home</a>
-                <a href="/recipes" class="text-white hover:text-yellow-400 block px-3 py-2 rounded-md text-base font-medium">📖 Recipes</a>
-                <a href="/categories" class="text-white hover:text-yellow-400 block px-3 py-2 rounded-md text-base font-medium">🏷️ Categories</a>
-                <a href="/brands" class="text-white hover:text-yellow-400 block px-3 py-2 rounded-md text-base font-medium">🏪 Brands</a>
-                <a href="/about" class="text-white hover:text-yellow-400 block px-3 py-2 rounded-md text-base font-medium">ℹ️ About</a>
-                <a href="/contact" class="text-white hover:text-yellow-400 block px-3 py-2 rounded-md text-base font-medium">📧 Contact</a>
+                <a href="/" class="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                    Home
+                </a>
+                <a href="/recipes" class="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+                    Recipes
+                </a>
+                <a href="/categories" class="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+                    Categories
+                </a>
+                <a href="/brands" class="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/></svg>
+                    Brands
+                </a>
+                <a href="/about" class="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                    About
+                </a>
+                <a href="/contact" class="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700">
+                    <svg class="w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+                    Contact
+                </a>
             </div>
         </div>
     </nav>
@@ -266,6 +330,40 @@
                 });
             });
         });
+        
+        // Social sharing functions
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.querySelector('h1').textContent);
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=Check out this amazing copycat recipe: ${title}`, '_blank', 'width=600,height=400');
+        }
+        
+        function shareOnPinterest() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.querySelector('h1').textContent);
+            const image = document.querySelector('img') ? encodeURIComponent(document.querySelector('img').src) : '';
+            window.open(`https://pinterest.com/pin/create/button/?url=${url}&media=${image}&description=Copycat recipe: ${title}`, '_blank', 'width=600,height=400');
+        }
+        
+        function copyRecipeLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Recipe link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = window.location.href;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Recipe link copied to clipboard!');
+            });
+        }
     </script>
 </body>
 </html>

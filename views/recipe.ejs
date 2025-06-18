@@ -1,154 +1,269 @@
 <%- include('layout', { body: `
-    <!-- Recipe Header -->
-    <article class="bg-white">
+    <article class="bg-white min-h-screen">
         <!-- Breadcrumb -->
-        <div class="bg-gray-100 py-4">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <nav class="text-sm text-gray-600">
-                    <a href="/" class="hover:text-purple-600">Home</a>
-                    <span class="mx-2">›</span>
-                    <a href="/recipes" class="hover:text-purple-600">Recipes</a>
-                    <span class="mx-2">›</span>
-                    <a href="/recipes?brand=${recipe.brandSlug}" class="hover:text-purple-600">${recipe.brand}</a>
-                    <span class="mx-2">›</span>
-                    <span class="text-gray-900">${recipe.title}</span>
+        <div class="bg-slate-100 border-b border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <nav class="text-sm text-slate-600 flex items-center space-x-2">
+                    <a href="/" class="hover:text-orange-600 transition-colors">Home</a>
+                    <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <a href="/recipes" class="hover:text-orange-600 transition-colors">Recipes</a>
+                    <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <a href="/recipes?brand=${recipe.brandSlug}" class="hover:text-orange-600 transition-colors">${recipe.brand}</a>
+                    <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-slate-900 font-medium">${recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()}</span>
                 </nav>
             </div>
         </div>
 
-        <!-- Recipe Hero -->
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Recipe Image -->
-                <div class="lg:order-2">
-                    ${recipe.image ? `
-                        <img src="${recipe.image}" 
-                             alt="${recipe.imageAlt || recipe.title}" 
-                             class="w-full h-64 lg:h-80 object-cover rounded-lg shadow-lg">
-                    ` : `
-                        <div class="w-full h-64 lg:h-80 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg shadow-lg flex items-center justify-center">
-                            <span class="text-6xl">🍽️</span>
+        <!-- Recipe Header -->
+        <div class="bg-gradient-to-br from-slate-50 to-slate-100 border-b border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Recipe Info -->
+                    <div class="space-y-6">
+                        <!-- Brand & Category Tags -->
+                        <div class="flex flex-wrap gap-3">
+                            <a href="/recipes?brand=${recipe.brandSlug}" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-orange-100 text-orange-800 border border-orange-200 hover:bg-orange-200 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                </svg>
+                                ${recipe.brand}
+                            </a>
+                            <a href="/recipes?category=${recipe.foodType ? recipe.foodType.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'unknown'}" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                ${recipe.foodType}
+                            </a>
+                            ${recipe.difficulty ? `
+                                <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                                    </svg>
+                                    ${recipe.difficulty}
+                                </span>
+                            ` : ''}
                         </div>
-                    `}
-                </div>
 
-                <!-- Recipe Info -->
-                <div class="lg:order-1">
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-purple-100 text-purple-800 text-sm font-semibold px-3 py-1 rounded-full">
-                            ${recipe.brand}
-                        </span>
-                        <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-3 py-1 rounded-full">
-                            ${recipe.foodType}
-                        </span>
-                        ${recipe.difficulty ? `
-                            <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
-                                ${recipe.difficulty}
-                            </span>
+                        <!-- Title -->
+                        <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight tracking-tight">
+                            ${recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()}
+                        </h1>
+
+                        <!-- Description -->
+                        ${recipe.description ? `
+                            <p class="text-xl text-slate-600 leading-relaxed">
+                                ${recipe.description}
+                            </p>
                         ` : ''}
+
+                        <!-- Recipe Meta Grid -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+                            ${recipe.yield ? `
+                                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+                                    <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                        <svg class="w-5 h-5 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Serves</div>
+                                    <div class="text-lg font-bold text-slate-900">${recipe.yield}</div>
+                                </div>
+                            ` : ''}
+                            ${recipe.prepTime ? `
+                                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Prep</div>
+                                    <div class="text-lg font-bold text-slate-900">${recipe.prepTime}</div>
+                                </div>
+                            ` : ''}
+                            ${recipe.cookTime ? `
+                                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+                                    <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                        <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Cook</div>
+                                    <div class="text-lg font-bold text-slate-900">${recipe.cookTime}</div>
+                                </div>
+                            ` : ''}
+                            ${recipe.totalTime ? `
+                                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-center">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Total</div>
+                                    <div class="text-lg font-bold text-slate-900">${recipe.totalTime}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Social Share Buttons -->
+                        <div class="mt-8 pt-6 border-t border-slate-200">
+                            <h4 class="text-lg font-semibold text-slate-900 mb-4">Share This Recipe</h4>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                                <a href="#" onclick="shareOnFacebook()" 
+                                   class="flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors text-sm">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                    Facebook
+                                </a>
+                                <a href="#" onclick="shareOnTwitter()" 
+                                   class="flex items-center justify-center px-4 py-3 bg-blue-400 hover:bg-blue-500 text-white font-medium rounded-xl transition-colors text-sm">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                    </svg>
+                                    Twitter
+                                </a>
+                                <a href="#" onclick="shareOnPinterest()" 
+                                   class="flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition-colors text-sm">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.097.118.112.223.083.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.624 0 11.99-5.367 11.99-11.987C24.007 5.367 18.641.001 12.017.001z"/>
+                                    </svg>
+                                    Pinterest
+                                </a>
+                                <button onclick="copyRecipeLink()" 
+                                        class="flex items-center justify-center px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-xl transition-colors text-sm">
+                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+                                        <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+                                    </svg>
+                                    Copy Link
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Title -->
-                    <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                        ${recipe.title}
-                    </h1>
-
-                    <!-- Description -->
-                    ${recipe.description ? `
-                        <p class="text-lg text-gray-600 mb-6">
-                            ${recipe.description}
-                        </p>
-                    ` : ''}
-
-                    <!-- Recipe Meta -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        ${recipe.yield ? `
-                            <div class="text-center p-4 bg-gray-50 rounded-lg">
-                                <div class="text-2xl mb-1">🍽️</div>
-                                <div class="text-sm text-gray-600">Yield</div>
-                                <div class="font-semibold">${recipe.yield}</div>
+                    <!-- Recipe Image -->
+                    <div class="lg:order-last">
+                        ${recipe.image ? `
+                            <div class="relative group">
+                                <img src="${recipe.image}" 
+                                     alt="${recipe.imageAlt || recipe.title}" 
+                                     class="w-full h-80 lg:h-96 object-cover rounded-2xl shadow-2xl transition-transform duration-300 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
                             </div>
-                        ` : ''}
-                        ${recipe.prepTime ? `
-                            <div class="text-center p-4 bg-gray-50 rounded-lg">
-                                <div class="text-2xl mb-1">⏱️</div>
-                                <div class="text-sm text-gray-600">Prep Time</div>
-                                <div class="font-semibold">${recipe.prepTime}</div>
+                        ` : `
+                            <div class="w-full h-80 lg:h-96 bg-gradient-to-br from-slate-200 to-slate-300 rounded-2xl shadow-2xl flex items-center justify-center">
+                                <div class="text-center">
+                                    <svg class="w-16 h-16 text-slate-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <p class="text-slate-500 font-medium">Recipe Image</p>
+                                </div>
                             </div>
-                        ` : ''}
-                        ${recipe.cookTime ? `
-                            <div class="text-center p-4 bg-gray-50 rounded-lg">
-                                <div class="text-2xl mb-1">🔥</div>
-                                <div class="text-sm text-gray-600">Cook Time</div>
-                                <div class="font-semibold">${recipe.cookTime}</div>
-                            </div>
-                        ` : ''}
-                        ${recipe.totalTime ? `
-                            <div class="text-center p-4 bg-gray-50 rounded-lg">
-                                <div class="text-2xl mb-1">⌚</div>
-                                <div class="text-sm text-gray-600">Total Time</div>
-                                <div class="font-semibold">${recipe.totalTime}</div>
-                            </div>
-                        ` : ''}
+                        `}
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Recipe Content -->
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 xl:grid-cols-4 gap-12">
                 <!-- Main Content -->
-                <div class="lg:col-span-2">
-                    <!-- Recipe Content from Markdown -->
+                <div class="xl:col-span-3">
                     ${recipe.contentMarkdown ? `
-                        <div class="recipe-content space-y-8">
+                        <div class="recipe-content">
                             ${recipe.parsedContent || ''}
                         </div>
                     ` : `
-                        <div class="text-center py-16">
-                            <div class="text-6xl mb-4">📝</div>
-                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Recipe content not available</h3>
-                            <p class="text-gray-600">
-                                This recipe is currently being processed.
+                        <div class="text-center py-24 bg-slate-50 rounded-2xl border border-slate-200">
+                            <svg class="w-16 h-16 text-slate-400 mx-auto mb-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 1a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                            </svg>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-3">Recipe Content Coming Soon</h3>
+                            <p class="text-slate-600 text-lg">
+                                This recipe is currently being processed and will be available shortly.
                             </p>
                         </div>
                     `}
                 </div>
 
                 <!-- Sidebar -->
-                <div class="lg:col-span-1">
-                    <!-- Related Recipes -->
-                    ${relatedRecipes && relatedRecipes.length > 0 ? `
-                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-4">
-                                More ${recipe.brand} Recipes
-                            </h3>
-                            <div class="space-y-4">
-                                ${relatedRecipes.map(related => `
-                                    <a href="/recipes/${related.brandSlug}/${related.slug}" class="block group">
-                                        <div class="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                                            <h4 class="font-semibold text-gray-900 group-hover:text-purple-700 mb-1 line-clamp-2">
-                                                ${related.title}
-                                            </h4>
-                                            <p class="text-sm text-gray-500">
-                                                ${related.foodType}
-                                                ${related.totalTime ? ` • ${related.totalTime}` : ''}
-                                            </p>
-                                        </div>
+                <div class="xl:col-span-1">
+                    <div class="sticky top-8 space-y-8">
+                        <!-- Related Recipes -->
+                        ${relatedRecipes && relatedRecipes.length > 0 ? `
+                            <div class="bg-slate-50 rounded-2xl border border-slate-200 p-6">
+                                <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                    More ${recipe.brand} Recipes
+                                </h3>
+                                <div class="space-y-4">
+                                    ${relatedRecipes.map(related => `
+                                        <a href="/recipes/${related.brandSlug}/${related.slug}" class="block group">
+                                            <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200">
+                                <h4 class="font-semibold text-slate-900 group-hover:text-orange-600 mb-2 line-clamp-2 transition-colors">
+                                    ${related.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim()}
+                                </h4>
+                                                <div class="flex items-center text-sm text-slate-500">
+                                                    <span class="bg-slate-100 px-2 py-1 rounded text-xs font-medium">
+                                                        ${related.foodType}
+                                                    </span>
+                                                    ${related.totalTime ? `
+                                                        <span class="ml-2 flex items-center">
+                                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                                            </svg>
+                                                            ${related.totalTime}
+                                                        </span>
+                                                    ` : ''}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    `).join('')}
+                                </div>
+                                
+                                <div class="mt-6 pt-4 border-t border-slate-200">
+                                    <a href="/recipes?brand=${recipe.brandSlug}" 
+                                       class="inline-flex items-center text-orange-600 hover:text-orange-700 font-semibold text-sm transition-colors">
+                                        View all ${recipe.brand} recipes
+                                        <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                                        </svg>
                                     </a>
-                                `).join('')}
+                                </div>
                             </div>
-                            
-                            <div class="mt-4">
-                                <a href="/recipes?brand=${recipe.brandSlug}" 
-                                   class="text-purple-600 hover:text-purple-800 font-semibold text-sm">
-                                    View all ${recipe.brand} recipes →
-                                </a>
-                            </div>
+                        ` : ''}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="bg-slate-100 border-t border-slate-200">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                    <div class="flex items-start">
+                        <svg class="w-6 h-6 text-yellow-600 mt-1 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <h3 class="text-lg font-semibold text-yellow-800 mb-2">Important Disclaimer</h3>
+                            <p class="text-yellow-700 leading-relaxed text-sm">
+                                KnockoffKitchen.com is an independent recipe website and is not affiliated with, endorsed by, or sponsored by <strong>${recipe.brand}</strong> or any other brand mentioned. The recipes provided are intended to replicate the flavors and textures of popular brand-name products using common ingredients. All trademarks, brand names, and product names are the property of their respective owners. These recipes are created for entertainment and educational purposes only. We make no claims of exact duplication, and actual results may vary. Enjoy your homemade version!
+                            </p>
                         </div>
-                    ` : ''}
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,24 @@
+# This project requires Node.js server hosting
+# Netlify is for static sites only
+# 
+# RECOMMENDED HOSTING PLATFORMS:
+# 1. Vercel (Best for Node.js apps)
+# 2. Railway (Great for Node.js + MongoDB)
+# 3. Render (Free tier available)
+# 4. Heroku (Classic choice)
+#
+# This file is for documentation only
+# The app will not work on Netlify as it requires:
+# - Node.js server runtime
+# - Express.js backend
+# - MongoDB database connections
+# - Server-side rendering (EJS templates)
+
+[build]
+  command = "echo 'This is a Node.js app, not a static site. Please use Vercel, Railway, or Render instead.'"
+  publish = "public"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

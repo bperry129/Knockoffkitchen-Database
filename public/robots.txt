@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://knockoffkitchen.com/sitemap.xml
+Sitemap: https://knockoffkitchen-database-v9sd.vercel.app/sitemap.xml
 
 # Allow crawling of all recipe pages
 Allow: /recipes/

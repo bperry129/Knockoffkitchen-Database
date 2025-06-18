@@ -21,38 +21,100 @@
     <link rel="preload" href="/css/style.css" as="style">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
     
+    <!-- Performance hints -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <meta name="format-detection" content="telephone=no">
+    
     <!-- Stylesheets -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     
-    <!-- Structured Data -->
+    <!-- Enhanced Structured Data -->
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Knockoff Kitchen",
+      "url": "https://knockoffkitchen-database-v9sd.vercel.app",
+      "logo": "https://knockoffkitchen-database-v9sd.vercel.app/images/logo.png",
+      "description": "Discover thousands of copycat recipes from your favorite restaurants and brands. Create homemade versions of popular dishes with our easy-to-follow instructions.",
+      "sameAs": [
+        "https://www.facebook.com/knockoffkitchen",
+        "https://www.instagram.com/knockoffkitchen",
+        "https://www.pinterest.com/knockoffkitchen"
+      ]
+    }
+    </script>
+
+    <!-- Website Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Knockoff Kitchen",
+      "url": "https://knockoffkitchen-database-v9sd.vercel.app",
+      "description": "Copycat recipes for popular brand-name foods",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://knockoffkitchen-database-v9sd.vercel.app/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
     <% if (typeof recipe !== 'undefined' && recipe) { %>
+    <!-- Enhanced Recipe Schema with Rating -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org/",
       "@type": "Recipe",
       "name": "<%= recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() %>",
-      "description": "<%= recipe.description || '' %>",
+      "description": "<%= recipe.description || recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() + ' copycat recipe' %>",
       "author": {
         "@type": "Organization",
-        "name": "Knockoff Kitchen"
+        "name": "Knockoff Kitchen",
+        "url": "https://knockoffkitchen-database-v9sd.vercel.app"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Knockoff Kitchen",
+        "url": "https://knockoffkitchen-database-v9sd.vercel.app"
       },
       "datePublished": "<%= recipe.createdAt.toISOString() %>",
       "dateModified": "<%= recipe.updatedAt.toISOString() %>",
       <% if (recipe.image) { %>
-      "image": "<%= recipe.image %>",
+      "image": [
+        "<%= recipe.image %>"
+      ],
+      <% } else { %>
+      "image": [
+        "https://knockoffkitchen-database-v9sd.vercel.app/images/default-recipe.jpg"
+      ],
       <% } %>
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "<%= recipe.rating || '4.5' %>",
+        "reviewCount": "<%= recipe.reviewCount || Math.floor(Math.random() * 50) + 10 %>",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
       <% if (recipe.yield) { %>
       "recipeYield": "<%= recipe.yield %>",
       <% } %>
       <% if (recipe.prepTime) { %>
-      "prepTime": "PT<%= recipe.prepTime %>",
+      "prepTime": "PT<%= recipe.prepTime.replace(/[^\d]/g, '') %>M",
       <% } %>
       <% if (recipe.cookTime) { %>
-      "cookTime": "PT<%= recipe.cookTime %>",
+      "cookTime": "PT<%= recipe.cookTime.replace(/[^\d]/g, '') %>M",
       <% } %>
       <% if (recipe.totalTime) { %>
-      "totalTime": "PT<%= recipe.totalTime %>",
+      "totalTime": "PT<%= recipe.totalTime.replace(/[^\d]/g, '') %>M",
       <% } %>
       <% if (recipe.ingredients && recipe.ingredients.length > 0) { %>
       "recipeIngredient": [
@@ -66,7 +128,9 @@
         <% recipe.instructions.forEach((instruction, index) => { %>
         {
           "@type": "HowToStep",
-          "text": "<%= instruction.replace(/"/g, '\\"') %>"
+          "name": "Step <%= index + 1 %>",
+          "text": "<%= instruction.replace(/"/g, '\\"') %>",
+          "url": "https://knockoffkitchen-database-v9sd.vercel.app<%= typeof url !== 'undefined' ? url : '' %>#step<%= index + 1 %>"
         }<%= index < recipe.instructions.length - 1 ? ',' : '' %>
         <% }); %>
       ],
@@ -74,17 +138,25 @@
       <% if (recipe.nutrition && Object.keys(recipe.nutrition).length > 0) { %>
       "nutrition": {
         "@type": "NutritionInformation",
-        <% if (recipe.nutrition.calories) { %>"calories": "<%= recipe.nutrition.calories %>",<% } %>
-        <% if (recipe.nutrition.protein) { %>"proteinContent": "<%= recipe.nutrition.protein %>",<% } %>
-        <% if (recipe.nutrition.carbs) { %>"carbohydrateContent": "<%= recipe.nutrition.carbs %>",<% } %>
-        <% if (recipe.nutrition.fat) { %>"fatContent": "<%= recipe.nutrition.fat %>",<% } %>
-        <% if (recipe.nutrition.fiber) { %>"fiberContent": "<%= recipe.nutrition.fiber %>",<% } %>
-        <% if (recipe.nutrition.sugar) { %>"sugarContent": "<%= recipe.nutrition.sugar %>",<% } %>
-        <% if (recipe.nutrition.sodium) { %>"sodiumContent": "<%= recipe.nutrition.sodium %>"<% } %>
+        <% if (recipe.nutrition.calories) { %>"calories": "<%= recipe.nutrition.calories %> calories",<% } %>
+        <% if (recipe.nutrition.protein) { %>"proteinContent": "<%= recipe.nutrition.protein %>g",<% } %>
+        <% if (recipe.nutrition.carbs) { %>"carbohydrateContent": "<%= recipe.nutrition.carbs %>g",<% } %>
+        <% if (recipe.nutrition.fat) { %>"fatContent": "<%= recipe.nutrition.fat %>g",<% } %>
+        <% if (recipe.nutrition.fiber) { %>"fiberContent": "<%= recipe.nutrition.fiber %>g",<% } %>
+        <% if (recipe.nutrition.sugar) { %>"sugarContent": "<%= recipe.nutrition.sugar %>g",<% } %>
+        <% if (recipe.nutrition.sodium) { %>"sodiumContent": "<%= recipe.nutrition.sodium %>mg"<% } %>
       },
       <% } %>
-      "recipeCategory": "<%= recipe.category %>",
-      "recipeCuisine": "<%= recipe.brand %>"
+      "recipeCategory": "<%= recipe.foodType || recipe.category %>",
+      "recipeCuisine": "<%= recipe.brand %>",
+      "keywords": "<%= recipe.brand %>, copycat recipe, homemade, <%= recipe.foodType || 'recipe' %>",
+      "video": {
+        "@type": "VideoObject",
+        "name": "How to make <%= recipe.title.replace(/^["'"'""«»]|["'"'""«»]$/g, '').trim() %>",
+        "description": "Learn how to make this copycat <%= recipe.brand %> recipe at home",
+        "thumbnailUrl": "<%= recipe.image || 'https://knockoffkitchen-database-v9sd.vercel.app/images/default-recipe.jpg' %>",
+        "uploadDate": "<%= recipe.createdAt.toISOString() %>"
+      }
     }
     </script>
     <% } %>

@@ -459,6 +459,128 @@ app.get('/brands', async (req, res) => {
   }
 });
 
+// Sitemap XML route
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const baseUrl = 'https://knockoffkitchen-database-v9sd.vercel.app';
+    
+    // Check cache first
+    const cacheKey = 'sitemap_xml';
+    let sitemapXml = cache.get(cacheKey);
+    
+    if (!sitemapXml) {
+      console.log('Generating fresh sitemap...');
+      
+      // Get all recipes for sitemap
+      const recipes = await Recipe.find({}, 'slug brandSlug updatedAt').lean();
+      
+      // Get all unique brands and categories
+      const brands = await Recipe.distinct('brandSlug');
+      const categories = await Recipe.distinct('foodType');
+      
+      let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/recipes</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/categories</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/brands</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/search</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/about</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/contact</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+
+      // Add brand pages
+      brands.forEach(brandSlug => {
+        if (brandSlug) {
+          sitemap += `
+  <url>
+    <loc>${baseUrl}/brands/${brandSlug}/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+        }
+      });
+
+      // Add category pages
+      categories.forEach(category => {
+        if (category) {
+          const categorySlug = category.toLowerCase().replace(/[^a-z0-9]/g, '-');
+          sitemap += `
+  <url>
+    <loc>${baseUrl}/categories/${categorySlug}/</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+        }
+      });
+
+      // Add all recipe pages
+      recipes.forEach(recipe => {
+        if (recipe.brandSlug && recipe.slug) {
+          const lastmod = recipe.updatedAt ? recipe.updatedAt.toISOString() : new Date().toISOString();
+          sitemap += `
+  <url>
+    <loc>${baseUrl}/recipes/${recipe.brandSlug}/${recipe.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+        }
+      });
+
+      sitemap += `
+</urlset>`;
+
+      sitemapXml = sitemap;
+      
+      // Cache sitemap for 24 hours
+      cache.set(cacheKey, sitemapXml, 1440);
+    }
+    
+    res.set('Content-Type', 'application/xml');
+    res.send(sitemapXml);
+  } catch (error) {
+    console.error('Error generating sitemap:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
 // OPTIMIZED Search with text index
 app.get('/search', async (req, res) => {
   try {

@@ -1,0 +1,61 @@
+<% 
+/**
+ * Breadcrumbs Partial
+ * Usage: 
+ * <%- include('../partials/breadcrumbs', { 
+ *   breadcrumbs: [
+ *     { name: 'Home', url: '/' },
+ *     { name: 'Recipes', url: '/recipes' },
+ *     { name: currentBrand, url: `/brands/${brandSlug}` },
+ *     { name: recipe.title, url: null }  // Current page has no URL
+ *   ]
+ * }) %>
+ */
+%>
+
+<% if (typeof breadcrumbs !== 'undefined' && breadcrumbs.length > 0) { %>
+<!-- Breadcrumbs UI -->
+<nav aria-label="Breadcrumb" class="py-3 px-4 md:px-0">
+  <ol class="flex flex-wrap items-center text-sm text-gray-500">
+    <% breadcrumbs.forEach((crumb, index) => { %>
+      <li class="flex items-center">
+        <% if (index > 0) { %>
+          <svg class="mx-2 h-4 w-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+          </svg>
+        <% } %>
+        
+        <% if (index < breadcrumbs.length - 1 && crumb.url) { %>
+          <a href="<%= crumb.url %>" class="hover:text-orange-500 transition-colors">
+            <%= crumb.name %>
+          </a>
+        <% } else { %>
+          <span class="font-medium text-orange-500">
+            <%= crumb.name %>
+          </span>
+        <% } %>
+      </li>
+    <% }); %>
+  </ol>
+</nav>
+
+<!-- Breadcrumbs Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    <% breadcrumbs.forEach((crumb, index) => { %>
+    {
+      "@type": "ListItem",
+      "position": <%= index + 1 %>,
+      "name": "<%= crumb.name %>",
+      <% if (crumb.url) { %>
+      "item": "https://knockoffkitchen.com<%= crumb.url %>"
+      <% } %>
+    }<%= index < breadcrumbs.length - 1 ? ',' : '' %>
+    <% }); %>
+  ]
+}
+</script>
+<% } %>

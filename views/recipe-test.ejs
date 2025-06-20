@@ -1,0 +1,66 @@
+<%- include('layout', { 
+    title: "Test Recipe Page",
+    description: "A test recipe page to verify EJS rendering",
+    url: "/recipe-test",
+    currentRoute: "/recipe-test",
+    recipe: {
+        title: "Test Recipe",
+        brand: "Test Brand",
+        brandSlug: "test-brand",
+        slug: "test-recipe",
+        description: "This is a test recipe description",
+        image: "/images/placeholder.png",
+        foodType: "Test Category",
+        foodTypeSlug: "test-category",
+        yield: "4 servings",
+        prepTime: "15 minutes",
+        cookTime: "30 minutes",
+        totalTime: "45 minutes",
+        difficulty: "Easy",
+        rating: {
+            value: 4.5,
+            count: 10
+        },
+        ingredients: [
+            "1 cup test ingredient",
+            "2 tablespoons test ingredient 2",
+            "3 teaspoons test ingredient 3"
+        ],
+        instructions: [
+            "Step 1: Do something",
+            "Step 2: Do something else",
+            "Step 3: Finish the recipe"
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    relatedRecipes: [
+        {
+            title: "Related Recipe 1",
+            brand: "Test Brand",
+            url: "/recipe-test",
+            image: "/images/placeholder.png",
+            rating: { value: 4.2 }
+        },
+        {
+            title: "Related Recipe 2",
+            brand: "Test Brand",
+            url: "/recipe-test",
+            image: "/images/placeholder.png",
+            rating: { value: 4.7 }
+        }
+    ],
+    body: `
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-slate-900 mb-4">Test Recipe Page</h1>
+            <p class="text-slate-600 mb-6">This is a test recipe page to verify EJS rendering is working correctly.</p>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                <div class="p-8">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4">Test Content</h2>
+                    <p>If you can see this page, EJS rendering is working correctly!</p>
+                </div>
+            </div>
+        </div>
+    `
+}) %>

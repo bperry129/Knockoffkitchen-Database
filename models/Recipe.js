@@ -7,6 +7,24 @@ const recipeSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  rating: {
+    value: {
+      type: Number,
+      default: 4.5 // Default rating without randomization
+    },
+    count: {
+      type: Number,
+      default: 0 // Start with 0 ratings
+    },
+    userRatings: [{
+      userId: String,
+      value: Number,
+      date: {
+        type: Date,
+        default: Date.now
+      }
+    }]
+  },
   slug: {
     type: String,
     unique: true
@@ -117,7 +135,10 @@ const recipeSchema = new mongoose.Schema({
   seo: {
     title: String,
     description: String,
-    keywords: String
+    keywords: {
+      type: [String],
+      default: []
+    }
   },
   date: {
     type: Date,
@@ -142,15 +163,21 @@ const recipeSchema = new mongoose.Schema({
 
 // Create URL-friendly slugs
 recipeSchema.pre('save', function(next) {
-  if (this.isModified('title')) {
-    this.slug = slugify(this.title, { lower: true, strict: true });
+  // Generate slug if title changes or slug doesn't exist
+  if (this.isModified('title') || !this.slug) {
+    this.slug = slugify(this.title || 'recipe', { lower: true, strict: true });
   }
-  if (this.isModified('brand')) {
-    this.brandSlug = slugify(this.brand, { lower: true, strict: true });
+  
+  // Generate brandSlug if brand changes or brandSlug doesn't exist
+  if (this.isModified('brand') || !this.brandSlug) {
+    this.brandSlug = slugify(this.brand || 'unknown-brand', { lower: true, strict: true });
   }
-  if (this.isModified('category')) {
-    this.categorySlug = slugify(this.category, { lower: true, strict: true });
+  
+  // Generate foodTypeSlug if foodType changes or foodTypeSlug doesn't exist
+  if (this.isModified('foodType') || !this.foodTypeSlug) {
+    this.foodTypeSlug = slugify(this.foodType || 'recipe', { lower: true, strict: true });
   }
+  
   this.updatedAt = Date.now();
   next();
 });
@@ -161,10 +188,18 @@ recipeSchema.virtual('url').get(function() {
 });
 
 // Indexes for performance
-recipeSchema.index({ brand: 1, slug: 1 });
-recipeSchema.index({ category: 1 });
+recipeSchema.index({ brandSlug: 1, slug: 1 }, { unique: true });
+recipeSchema.index({ brand: 1 });
+recipeSchema.index({ foodType: 1 });
+recipeSchema.index({ foodTypeSlug: 1 });
 recipeSchema.index({ featured: 1 });
 recipeSchema.index({ tags: 1 });
 recipeSchema.index({ createdAt: -1 });
+recipeSchema.index({ 
+  title: 'text', 
+  description: 'text', 
+  brand: 'text', 
+  foodType: 'text' 
+});
 
 module.exports = mongoose.model('Recipe', recipeSchema);

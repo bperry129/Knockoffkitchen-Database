@@ -1,0 +1,60 @@
+<% 
+/**
+ * Recipe FAQ Partial
+ * Usage: 
+ * <%- include('../partials/recipe-faq', { 
+ *   recipe: recipe,
+ *   faqs: [
+ *     { question: 'Is this exactly like the original?', answer: 'This recipe aims to closely match the original...' },
+ *     { question: 'Can I make this ahead of time?', answer: 'Yes, you can prepare this recipe up to 2 days in advance...' }
+ *   ]
+ * }) %>
+ */
+%>
+
+<% if (typeof recipe !== 'undefined' && typeof faqs !== 'undefined' && faqs.length > 0) { %>
+<!-- FAQ UI Section -->
+<section class="mt-8 mb-6">
+  <h2 class="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+  
+  <div class="space-y-4">
+    <% faqs.forEach((faq, index) => { %>
+      <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
+        <details class="group" id="faq-<%= index %>">
+          <summary class="flex justify-between items-center cursor-pointer p-4 text-gray-800 font-medium">
+            <span><%= faq.question %></span>
+            <span class="transition-transform group-open:rotate-180">
+              <svg class="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 pt-0 text-gray-600">
+            <%= faq.answer %>
+          </div>
+        </details>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    <% faqs.forEach((faq, index) => { %>
+    {
+      "@type": "Question",
+      "name": "<%= faq.question %>",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "<%= faq.answer.replace(/"/g, '\\"') %>"
+      }
+    }<%= index < faqs.length - 1 ? ',' : '' %>
+    <% }); %>
+  ]
+}
+</script>
+<% } %>

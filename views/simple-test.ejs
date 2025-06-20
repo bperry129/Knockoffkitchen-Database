@@ -1,0 +1,19 @@
+<%- include('layout', { 
+    title: "Simple Test Page",
+    description: "A simple test page to verify EJS rendering",
+    url: "/simple-test",
+    currentRoute: "/simple-test",
+    body: `
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-slate-900 mb-4">Simple Test Page</h1>
+            <p class="text-slate-600 mb-6">This is a simple test page to verify EJS rendering is working correctly.</p>
+            
+            <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+                <div class="p-8">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4">Test Content</h2>
+                    <p>If you can see this page, EJS rendering is working correctly!</p>
+                </div>
+            </div>
+        </div>
+    `
+}) %>
